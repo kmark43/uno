@@ -1,0 +1,224 @@
+div .card {
+    width: 168px;
+    height: 258px;
+    background-image: url('/public/unosprites.png');
+    background-repeat: no-repeat;
+    border-radius: 8px;
+    position: relative;
+}
+
+.cardback {
+    background-position: 0px 0px;
+}
+
+.wildcard {
+    background-position: -168px 0px;
+}
+
+.yellow-one {
+    background-position: 0px -258px;
+}
+
+.yellow-two {
+    background-position: -168px -258px;
+}
+
+.yellow-three {
+    background-position: -336px -258px;
+}
+
+.yellow-four {
+    background-position: -504px -258px;
+}
+
+.yellow-five {
+    background-position: -672px -258px;
+}
+
+.yellow-six {
+    background-position: -840px -258px;
+}
+
+.yellow-seven {
+    background-position: -1008px -258px;
+}
+
+.yellow-eight {
+    background-position: -1176px -258px;
+}
+
+.yellow-nine {
+    background-position: -1344px -258px;
+}
+
+.yellow-zero {
+    background-position: -1512px -258px;
+}
+
+.yellow-plustwo {
+    background-position: -1680px -258px;
+}
+
+.yellow-skip {
+    background-position: -1848px -258px;
+}
+
+.yellow-reverse {
+    background-position: 0px -516px;
+}
+
+.red-one {
+    background-position: -168px -516px;
+}
+
+.red-two {
+    background-position: -336px -516px;
+}
+
+.red-three {
+    background-position: -504px -516px;
+}
+
+.red-four {
+    background-position: -672px -516px;
+}
+
+.red-five {
+    background-position: -840px -516px;
+}
+
+.red-six {
+    background-position: -1008px -516px;
+}
+
+.red-seven {
+    background-position: -1176px -516px;
+}
+
+.red-eight {
+    background-position: -1344px -516px;
+}
+
+.red-nine {
+    background-position: -1512px -516px;
+}
+
+.red-zero {
+    background-position: -1680px -516px;
+}
+
+.red-plustwo {
+    background-position: -1848px -516px;
+}
+
+.red-skip {
+    background-position: 0px -774px;
+}
+
+.red-reverse {
+    background-position: -168px -774px;
+}
+
+.blue-one {
+    background-position: -336px -774px;
+}
+
+.blue-two {
+    background-position: -504px -774px;
+}
+
+.blue-three {
+    background-position: -672px -774px;
+}
+
+.blue-four {
+    background-position: -840px -774px;
+}
+
+.blue-five {
+    background-position: -1008px -774px;
+}
+
+.blue-six {
+    background-position: -1176px -774px;
+}
+
+.blue-seven {
+    background-position: -1344px -774px;
+}
+
+.blue-eight {
+    background-position: -1512px -774px;
+}
+
+.blue-nine {
+    background-position: -1680px -774px;
+}
+
+.blue-zero {
+    background-position: -1848px -774px;
+}
+
+.blue-plustwo {
+    background-position: 0px -774px;
+}
+
+.blue-skip {
+    background-position: -168px -774px;
+}
+
+.blue-reverse {
+    background-position: -336px -774px;
+}
+
+.green-one {
+    background-position: -504px -1032px;
+}
+
+.green-two {
+    background-position: -672px -1032px;
+}
+
+.green-three {
+    background-position: -840px -1032px;
+}
+
+.green-four {
+    background-position: -1008px -1032px;
+}
+
+.green-five {
+    background-position: -1176px -1032px;
+}
+
+.green-six {
+    background-position: -1344px -1032px;
+}
+
+.green-seven {
+    background-position: -1512px -1032px;
+}
+
+.green-eight {
+    background-position: -1680px -1032px;
+}
+
+.green-nine {
+    background-position: -1848px -1032px;
+}
+
+.green-zero {
+    background-position: 0px -1290px;
+}
+
+.green-plustwo {
+    background-position: -168px -1290px;
+}
+
+.green-skip {
+    background-position: -336px -1290px;
+}
+
+.green-reverse {
+    background-position: -504px -1290px;
+}
