@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 import { Server, Socket } from 'socket.io';
-import GameRoom, { User } from './gameRoom';
+import GameRoom, { User, Card, GameState } from './gameRoom';
 
 const express = require('express');
 const app = express();
@@ -9,12 +9,13 @@ const server = createServer(app);
 interface ServerToClientEvents {
     joinRoom: (socketId: string) => void;
     selfJoinRoom: (socketId: string, user: User) => void;
+    updateGameState: (gameState: GameState) => void;
+    updateHand: (hand: Card[]) => void;
 }
 
 interface ClientToServerEvents {
     joinRoom: (roomId: string) => void;
-    gameStart: (roomId: string) => void;
-    playerJoin: () => void;
+    playMove: (roomId: string, cardPosition: number) => void;
 }
 
 interface InterServerEvents {
@@ -56,7 +57,13 @@ io.on('connection', (socket) => {
         socket.broadcast.to(roomId).emit('joinRoom', socket.id);
     });
 
-    socket.on('playerJoin', () => {
+    socket.on('playMove', (roomId, cardPosition) => {
+        if (roomMap.has(roomId)) {
+            const room = roomMap.get(roomId)!;
+            const gameState = room.playMove(socket.id, cardPosition);
+            io.to(roomId).emit('updateGameState', gameState);
+            socket.emit('updateHand', room.getHand(socket.id)!);
+        }
     });
 });
 

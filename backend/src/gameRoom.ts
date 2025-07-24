@@ -11,7 +11,10 @@ export interface User {
 }
 
 export interface GameState {
-
+    isGameWon: boolean,
+    lastCard: Card,
+    turnSocketId: string,
+    remainingInHands: { socketId: string, cardsInHand: number }[]
 }
 
 class GameRoom {
@@ -37,24 +40,38 @@ class GameRoom {
         return false;
     }
 
-    playMove(socketId: string, cardPosition: number) {
+    getGameState(): GameState {
+        return {
+            isGameWon: this.checkWin(),
+            lastCard: this.lastCard,
+            turnSocketId: this.users[this.turn].socketId,
+            remainingInHands: this.users.map((user) => {
+                return { socketId: user.socketId, cardsInHand: user.hand.length }
+            }),
+        };
+    }
+
+    getHand(socketId: string) {
+        return this.users.find((user) => user.socketId === socketId)?.hand;
+    }
+
+    playMove(socketId: string, cardPosition: number): GameState {
         let user = this.users.find((user) => user.socketId === socketId);
-        if (!user) {
-            return false;
+        if (!user || this.users[this.turn] !== user) {
+            return this.getGameState();
         }
 
         let card = user.hand[cardPosition];
         if (card.color !== this.lastCard.color && card.value !== this.lastCard.value) {
-            return false;
+            return this.getGameState();
         }
 
         let lastCardPos = Math.floor(Math.random() * this.deck.length);
         this.deck.splice(lastCardPos, 0, this.lastCard);
         this.lastCard = user.hand[cardPosition];
-        return {
-            lastCard: this.lastCard,
-
-        };
+        this.turn++;
+        this.turn %= this.users.length;
+        return this.getGameState();
     }
 
     addUser(socketId: string): User {
