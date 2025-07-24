@@ -7,7 +7,7 @@ const app = express();
 const server = createServer(app);
 
 interface ServerToClientEvents {
-    joinRoom: (socketId: string) => void;
+    joinRoom: (socketId: string, gameState: GameState) => void;
     selfJoinRoom: (socketId: string, user: User) => void;
     updateGameState: (gameState: GameState) => void;
     updateHand: (hand: Card[]) => void;
@@ -51,10 +51,11 @@ io.on('connection', (socket) => {
         if (!roomMap.has(roomId)) {
             roomMap.set(roomId, new GameRoom());
         }
-        const user = roomMap.get(roomId)!.addUser(socket.id);
+        const gameRoom = roomMap.get(roomId)!;
+        const user = gameRoom.addUser(socket.id);
         socket.join(roomId);
         socket.emit('selfJoinRoom', socket.id, user);
-        socket.broadcast.to(roomId).emit('joinRoom', socket.id);
+        io.to(roomId).emit('joinRoom', socket.id, gameRoom.getGameState());
     });
 
     socket.on('playMove', (roomId, cardPosition) => {
