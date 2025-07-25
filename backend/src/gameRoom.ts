@@ -27,7 +27,7 @@ class GameRoom {
         this.deck = this.createDeck();
         shuffle(this.deck);
         this.users = [];
-        this.turn = -1;
+        this.turn = 0;
         this.lastCard = this.deck.splice(0, 1)[0];
     }
 
@@ -75,12 +75,28 @@ class GameRoom {
     }
 
     addUser(socketId: string): User {
+        console.log(`adding user - ${socketId}`);
+        const foundUser = this.users.find((user) => user.socketId === socketId);
+        if (foundUser) {
+            return foundUser;
+        }
         const user = {
             socketId: socketId,
             hand: this.deck.splice(0, 7),
         };
         this.users.push(user);
+
+        console.log(`added user - ${socketId}, ${this.users}`);
         return user;
+    }
+
+    removeUser(socketId: string) {
+        console.log(`removing user from room - ${socketId}`);
+        const foundUser = this.users.find((user) => user.socketId === socketId);
+        if (foundUser) {
+            this.deck.splice(0, 0, ...foundUser.hand);
+            this.users = this.users.filter((user) => user.socketId !== socketId);
+        }
     }
 
     createDeck(): Card[] {

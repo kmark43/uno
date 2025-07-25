@@ -1,8 +1,8 @@
 import './card.css';
 
-export default function Card(props: { color: string, value: string, showFace: boolean, x: number }) {
+export default function Card(props: { color?: string, value: string, showFace: boolean, x: number }) {
     const { color, value } = props;
-    let cardValue = color === 'wildcard' ? 'wildcard' : `${color}-${numbersToText(value)}`;
+    let cardValue = value === 'wildcard' ? 'wildcard' : `${color}-${numbersToText(value)}`;
 
     if (!props.showFace) {
         cardValue = 'cardback';

@@ -1,16 +1,29 @@
 import { useEffect, useState } from 'react';
 import { socket } from '../socket';
-import { CardProps } from './hand';
+import Hand, { CardProps } from './hand';
 import { useParams } from 'react-router-dom';
+import './game.css';
+import Card from './card';
 
 export interface RemainingInHand {
     socketId: string;
     cardsInHand: number;
 }
 
+export interface OtherUser {
+    id: string;
+    cardsInHand: RemainingInHand[];
+}
+
+export interface GameState {
+    isGameWon: boolean,
+    lastCard: CardProps,
+    turnSocketId: string,
+    remainingInHands: { socketId: string, cardsInHand: number }[]
+}
+
 export interface User {
     id: string;
-    isSelf: boolean;
     hand: CardProps[];
 }
 
@@ -29,7 +42,10 @@ export default function Game() {
     // game win screen
     const { roomCode } = useParams();
     const [isGameRunning, setGameRunning] = useState(false);
-    const [users, setUsers] = useState([]);
+    const [user, setUser] = useState<User>();
+    const [otherUsers, setOtherUsers] = useState<RemainingInHand[]>([]);
+    const [lastCard, setLastCard] = useState<CardProps>();
+    const [turn, setTurn] = useState<string>('');
 
     function initGameState() {
         setGameRunning(true);
@@ -49,24 +65,72 @@ export default function Game() {
             }
             remainingInHands[remainingInHands.length - 1] = first;
         }
+        remainingInHands.splice(0, 1);
 
         return remainingInHands;
     }
 
+    function updateGameState(gameState: GameState) {
+        setGameRunning(!gameState.isGameWon);
+        setLastCard(gameState.lastCard);
+        setTurn(gameState.turnSocketId);
+        setOtherUsers(rotateGameUsers(gameState.remainingInHands));
+    }
+
+    function updateHand(hand: CardProps[]) {
+        // setUser()
+    }
+
     useEffect(() => {
+        console.log('emitting joinRoom');
         socket.emit('joinRoom', roomCode);
 
         socket.on('joinRoom', (socketId, gameState) => {
+            updateGameState(gameState);
+        });
 
-        })
+        socket.on("selfJoinRoom", (socketId, hand) => {
+            setUser({
+                id: socket.id!,
+                hand: hand,
+            });
+        });
 
-        socket.on("selfJoinRoom", (socketId, user) => {
-            user.hand;
+        socket.on('updateGameState', (gameState) => {
+            updateGameState(gameState);
+        });
+
+        socket.on('updateHand', (hand) => {
+            setUser({
+                id: socket.id!,
+                hand: hand,
+            });
         });
     }, []);
+
+    function fillCards(numCards: number) {
+        let cards: CardProps[] = [];
+        for (let i = 0; i < numCards; i++) {
+            cards.push({
+                value: 'wildcard'
+            });
+        }
+        return cards;
+    }
+
     return (
         <>
-            Game room - {roomCode}
+            <div className='otherUsers'>
+                {otherUsers.map((user) => {
+                    return (<Hand ownHand={false} cards={fillCards(user.cardsInHand)} />);
+                })}
+            </div>
+            <div className='deck'>
+                {lastCard && <Card color={lastCard.color} value={lastCard.value} showFace={true} x={0} />}
+            </div>
+            <div className='ownHand'>
+                {user && <Hand ownHand={true} cards={user.hand} />}
+            </div>
         </>
     );
 }

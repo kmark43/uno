@@ -8,7 +8,7 @@ const server = createServer(app);
 
 interface ServerToClientEvents {
     joinRoom: (socketId: string, gameState: GameState) => void;
-    selfJoinRoom: (socketId: string, user: User) => void;
+    selfJoinRoom: (socketId: string, userHand: Card[]) => void;
     updateGameState: (gameState: GameState) => void;
     updateHand: (hand: Card[]) => void;
 }
@@ -29,7 +29,7 @@ interface SocketData {
 
 const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(server, {
     cors: {
-        origin: "localhost",
+        origin: "*",
         methods: ["GET", "POST"],
         credentials: true
   }
@@ -42,8 +42,12 @@ const roomMap = new Map<string, GameRoom>();
 io.on('connection', (socket) => {
     console.log('A user connected');
 
-    socket.on('disconnect', () => {
+    socket.on('disconnecting', () => {
         console.log('User disconnected');
+        for (let room of socket.rooms) {
+            console.log(`removing user from room ${room}`)
+            roomMap.get(room)?.removeUser(socket.id);
+        }
     });
 
     socket.on('joinRoom', (roomId) => {
@@ -54,7 +58,8 @@ io.on('connection', (socket) => {
         const gameRoom = roomMap.get(roomId)!;
         const user = gameRoom.addUser(socket.id);
         socket.join(roomId);
-        socket.emit('selfJoinRoom', socket.id, user);
+        console.log(`socket rooms - ${JSON.stringify(socket.rooms)}`);
+        socket.emit('selfJoinRoom', socket.id, user.hand);
         io.to(roomId).emit('joinRoom', socket.id, gameRoom.getGameState());
     });
 

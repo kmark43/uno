@@ -5,6 +5,11 @@ div .card {
     background-repeat: no-repeat;
     border-radius: 8px;
     position: relative;
+    transition: transform 150ms ease-in-out;
+}
+
+.card:hover:not(.cardback) {
+    transform: scale(1.15);
 }
 
 .cardback {

@@ -1,7 +1,7 @@
 import Card from "./card";
 
 export interface CardProps {
-    color: string;
+    color?: string;
     value: string
 }
 
